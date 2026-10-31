@@ -1,4 +1,4 @@
-# KS Connections
+# KK Connections
 
 Premium matrimonial consultancy website built with Python and Streamlit for Indian and international families.
 
