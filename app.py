@@ -1,67 +1,118 @@
-import streamlit as st
-from urllib.parse import quote
 import re
+from urllib.parse import quote
+import streamlit as st
 import plotly.graph_objects as go
 
-st.set_page_config(page_title="K&K Connections | Meaningful Matchmaking", page_icon="💗", layout="wide")
-WHATSAPP = "919825117413"  # Verify public business number before launch.
+st.set_page_config(page_title="K&K Connections | Personal Matrimonial Services in Ahmedabad",page_icon="💗",layout="wide")
+WHATSAPP="919825117413"
+SECONDARY_WHATSAPP="919173013877"
+PAGES=["Home","Our Story","How It Works","Global Connections","Register Interest","Fees & Contact"]
 st.markdown("""<style>
-.stApp{background:#fff9f6;color:#39232b}
-h1,h2,h3{font-family:Georgia,serif;color:#632f43}
-[data-testid="stSidebar"]{background:#f6e8e4}
-.hero{background:linear-gradient(120deg,#5d2d40,#a45b68);padding:65px 45px;border-radius:22px;color:#fff}
-.hero h1{color:#fff;font-size:clamp(36px,5vw,68px);line-height:1.1}
-.hero p{font-size:19px;max-width:700px}
-.eyebrow{letter-spacing:3px;font-size:12px;text-transform:uppercase;color:#e7bd9e}
-.panel{background:#f7eae5;border-radius:16px;padding:24px;margin:14px 0}
-.founder-card{background:linear-gradient(130deg,#fff3ef,#f5e2df);border:1px solid #ead4d0;border-radius:22px;padding:34px 38px;margin:24px 0 30px;box-shadow:0 8px 24px rgba(91,43,60,.045)}
-.founder-kicker{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#a46c66;font-weight:700}
-.founder-card h2{font-family:Georgia,serif;font-size:clamp(29px,3vw,44px);margin:10px 0 8px;color:#632f43}
-.founder-card p{font-size:17px;line-height:1.8;color:#563b43;max-width:900px}
-.founder-quote{font-family:Georgia,serif;font-style:italic;font-size:21px!important;color:#8b455b!important;border-left:3px solid #cba27d;padding-left:18px;margin-top:22px}
-.founder-names{font-size:14px;letter-spacing:1.3px;font-weight:700;color:#8b455b;margin-top:14px}
- .kk-logo{text-align:center;padding:10px 0 18px}.kk-logo-name{font-family:Georgia,serif;font-size:24px;font-weight:600;color:#632f43;margin-top:-5px} </style>""", unsafe_allow_html=True)
-LOGO = """<div class="kk-logo" aria-label="K&K Connections logo"><svg width="86" height="76" viewBox="0 0 86 76" role="img" aria-label="KK monogram"><path d="M15 9 H70" stroke="#c99c6a" stroke-width="1"/><path d="M38 6 Q43 -1 48 6 Q43 13 38 6" fill="none" stroke="#b7886b" stroke-width="1.4"/><text x="43" y="57" text-anchor="middle" font-family="Georgia,serif" font-size="34" fill="#673145" letter-spacing="-3">K&amp;K</text><path d="M20 66 H66" stroke="#c99c6a" stroke-width="1"/></svg><div class="kk-logo-name">K&K Connections</div></div>"""
-with st.sidebar:
-    st.markdown(LOGO,unsafe_allow_html=True)
-    st.caption("Matchmaking with heart · India & worldwide")
-    page=st.radio("Explore",["Home","Global Connections","About & Services","Register Interest","Fees & Contact"])
-    st.caption("Personal introductions. Private conversations.")
+.stApp{background:#fffaf7;color:#39232b}
+[data-testid="stSidebar"]{background:linear-gradient(180deg,#fff4ee,#f8e7e3)}
+[data-testid="stSidebar"] .stRadio label{font-size:15px}
+h1,h2,h3{font-family:Georgia,serif;color:#6d2c42}
+.block-container{padding-top:2rem;max-width:1200px}
+.hero{background:linear-gradient(108deg,rgba(95,26,47,.98),rgba(133,55,72,.93));border-radius:22px;padding:55px 48px;color:#fff;position:relative;overflow:hidden}
+.hero:after{content:"❀";position:absolute;right:1%;bottom:-22%;font-size:310px;opacity:.08;color:#ffe4c9;pointer-events:none}
+.hero h1{color:white;font-size:clamp(38px,5vw,66px);line-height:1.1;max-width:850px;margin:16px 0}
+.hero p{font-size:19px;max-width:650px;color:#fff0eb;line-height:1.65}
+.eyebrow{letter-spacing:2.6px;font-size:12px;text-transform:uppercase;color:#f4cba9;font-weight:700}
+.kk-logo{text-align:center;padding:14px 0 12px}
+.kk-monogram{font-family:Georgia,serif;font-size:58px;color:#6d2c42;line-height:1}
+.kk-sub{font-family:Georgia,serif;font-style:italic;font-size:23px;color:#8b5362}
+.kk-small{font-size:10px;letter-spacing:2px;color:#805d64;margin-top:10px}
+.section-card{background:linear-gradient(120deg,#fff2ec,#f8e3df);border:1px solid #f1dcd6;border-radius:19px;padding:28px 32px;margin:16px 0}
+.section-card p{font-size:16px;line-height:1.8}
+.section-card h2{font-size:clamp(28px,3vw,42px);margin:8px 0 14px}
+.kicker{font-size:12px;letter-spacing:2.2px;text-transform:uppercase;color:#985c64;font-weight:700}
+.quote{font-family:Georgia,serif;font-style:italic;font-size:21px;color:#8a3d54;border-left:3px solid #c49b7d;padding-left:15px;margin-top:18px}
+.trust{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}
+.trust span{flex:1;min-width:150px;background:#f9eae6;border-radius:13px;padding:16px;text-align:center;color:#743448}
+.stat{font-family:Georgia,serif;font-size:35px;color:#762f47;font-weight:bold}
+.steps{display:flex;gap:12px;flex-wrap:wrap;margin:15px 0}
+.step{flex:1;min-width:185px;background:#f8ebe6;padding:20px;border-radius:15px}
+.step strong{color:#6d2c42;font-size:18px}
+.step p{line-height:1.5;font-size:14px}
+.step-num{background:#8c455a;color:white;padding:7px 11px;border-radius:50%;margin-right:8px}
+.cta{background:#712c43;border-radius:18px;padding:27px 32px;color:white;margin:20px 0}
+.cta h2{color:white;margin:0 0 8px}
+.cta p{color:#fff0eb}
+.footer{color:#967b80;font-size:13px;text-align:center;padding:14px}
+@media(max-width:650px){.hero{padding:32px 23px}.section-card{padding:22px}.block-container{padding-top:1rem}}
+</style>""",unsafe_allow_html=True)
 
-if page=="Home":
-    st.markdown('<div class="hero"><div class="eyebrow">Personal matrimonial introductions</div><h1>Where meaningful<br>connections begin.</h1><p>Thoughtful matchmaking for individuals and families in India and across the world — guided by care, respect and personal attention.</p></div>',unsafe_allow_html=True)
-    st.write("")
-    a,b=st.columns(2)
-    with a: st.info("💗 Personalised introductions and family-focused guidance")
-    with b: st.info("🌏 Connecting Indian families across borders")
-    st.markdown('<section class="founder-card"><div class="founder-kicker">Our story · The people behind K&amp;K</div><h2>Meet Kamini &amp; Komal</h2><div class="founder-names">TWO WOMEN. ONE SHARED JOURNEY.</div><p>Our story began more than two and a half decades ago, brought together by a shared passion for clothing, creativity and the joy of connecting with people. What started as a journey in fashion has grown into something close to our hearts: helping people find meaningful companionship.</p><p>With K&amp;K Connections, we are taking that journey a little further. For us, matchmaking is not simply about finding someone who looks right on paper. It is about discovering a person who understands your world, shares your values and, most importantly, matches your vibe.</p><p>Rooted in Ahmedabad and open to conversations with families across India and beyond, we bring a personal, thoughtful and respectful approach to every introduction.</p><p class="founder-quote">Because the best connections are not just made — they are felt.</p></section>',unsafe_allow_html=True)
-    st.subheader("A personal journey, not a profile directory")
-    st.write("Tell us about your hopes, speak with our team, and explore suitable introductions privately. We believe meaningful connections begin with understanding.")
-    st.link_button("Speak to K&K Connections on WhatsApp",f"https://wa.me/{WHATSAPP}")
-elif page=="Global Connections":
-    st.title("Connections Across Borders")
-    st.write("From Ahmedabad to Indian communities worldwide. Routes are illustrative and do not represent actual client records.")
+with st.sidebar:
+    st.markdown('<div class="kk-logo"><div style="color:#c49b7d">──── ♡ ────</div><div class="kk-monogram">K&amp;K</div><div class="kk-sub">Connections</div><div class="kk-small">PERSONALISED MATRIMONIAL SERVICES<br>INDIA &amp; WORLDWIDE</div></div>',unsafe_allow_html=True)
+    page=st.radio("Explore",PAGES,index=4 if st.session_state.pop("go_register",False) else 0)
+    st.markdown('<div style="text-align:center;margin-top:24px;color:#926c72;font-family:Georgia,serif;font-style:italic">Personal introductions.<br>Private conversations.<br>Meaningful connections.</div>',unsafe_allow_html=True)
+
+def contact_button(label="Chat with Kamini on WhatsApp",message="Hello K&K Connections, I would like to know more about your matrimonial services."):
+    st.link_button(label,f"https://wa.me/{WHATSAPP}?text={quote(message)}",type="primary")
+
+def map_figure(height=380):
     cities={"Ahmedabad":(23.02,72.57),"Sydney":(-33.87,151.21),"London":(51.51,-0.13),"Toronto":(43.65,-79.38),"New York":(40.71,-74.01),"Dubai":(25.20,55.27),"Singapore":(1.35,103.82),"Auckland":(-36.85,174.76)}
     fig=go.Figure()
     for city,(lat,lon) in list(cities.items())[1:]:
-        fig.add_trace(go.Scattergeo(lat=[23.02,lat],lon=[72.57,lon],mode="lines",line=dict(width=1.7,color="#d6a369"),opacity=.8,hoverinfo="skip",showlegend=False))
-    fig.add_trace(go.Scattergeo(lat=[v[0] for v in cities.values()],lon=[v[1] for v in cities.values()],text=list(cities),mode="markers+text",textposition="top center",marker=dict(size=7,color="#8d4355"),hoverinfo="text",showlegend=False))
-    fig.update_geos(showland=True,landcolor="#eaded6",showocean=True,oceancolor="#fff9f6",showcoastlines=False,showframe=False,projection_type="natural earth",bgcolor="#fff9f6")
-    fig.update_layout(height=490,margin=dict(l=0,r=0,t=10,b=0),paper_bgcolor="#fff9f6")
-    st.plotly_chart(fig,use_container_width=True,config={"staticPlot":True,"displayModeBar":False,"responsive":True})
-    st.caption("Illustrative world connections · Static display")
-    st.caption("Global connections are an aspiration and service focus, not a claim of established international matches.")
-elif page=="About & Services":
-    st.title("Matchmaking with heart")
-    st.write("K&K Connections is a personalised matrimonial consultancy based in Ahmedabad, Gujarat, serving Indian families locally and internationally.")
-    for title,desc in [("01 · Reach out","Contact us to discuss your matrimonial enquiry."),("02 · Personal consultation","We learn about your expectations and preferences."),("03 · Thoughtful introductions","Potential introductions are discussed privately and respectfully."),("04 · Family guidance","We support conversations at a pace comfortable for everyone.")]:
-        st.markdown(f'<div class="panel"><h3>{title}</h3><p>{desc}</p></div>',unsafe_allow_html=True)
-    st.markdown('<section class="founder-card"><div class="founder-kicker">The founders</div><h2>Kamini &amp; Komal</h2><p>After more than 25 years on a shared journey that began with a love of clothing and creativity, Kamini and Komal founded K&amp;K Connections to bring the same personal touch to matrimonial introductions. They believe a lasting partnership goes beyond a checklist — it begins with shared values, mutual understanding and a genuine connection.</p><p class="founder-quote">Finding someone who matches your vibe.</p></section>',unsafe_allow_html=True)
-    st.info("We do not guarantee a match, engagement, or marriage.")
+        fig.add_trace(go.Scattergeo(lat=[23.02,lat],lon=[72.57,lon],mode="lines",line=dict(width=1.5,color="#d6a369"),opacity=.8,hoverinfo="skip",showlegend=False))
+    fig.add_trace(go.Scattergeo(lat=[v[0] for v in cities.values()],lon=[v[1] for v in cities.values()],text=list(cities),mode="markers+text",textposition="top center",marker=dict(size=7,color="#8d4355"),hoverinfo="skip",showlegend=False))
+    fig.update_geos(showland=True,landcolor="#edd9d3",showocean=True,oceancolor="#fff8f5",showcoastlines=False,showframe=False,projection_type="natural earth",bgcolor="#fff8f5")
+    fig.update_layout(height=height,margin=dict(l=0,r=0,t=0,b=0),paper_bgcolor="#fff8f5")
+    return fig
+
+def show_map(height=380):
+    st.plotly_chart(map_figure(height),use_container_width=True,config={"staticPlot":True,"displayModeBar":False,"responsive":True})
+
+def story(full=False):
+    st.markdown("""<section class="section-card"><div class="kicker">Our story · The people behind K&amp;K</div><h2>Meet Kamini &amp; Komal</h2><div class="kicker">Two women. One shared journey.</div><p>Our journey began more than two and a half decades ago, brought together by a shared passion for clothing, creativity and the joy of connecting with people.</p><p>What started in fashion has grown into something closer to our hearts — helping individuals and families find meaningful companionship.</p><p>With K&amp;K Connections, we are taking that journey a little further. For us, matchmaking is not simply about finding someone who looks right on paper. It is about discovering a person who understands your world, shares your values and, most importantly, <b>matches your vibe.</b></p><p class="quote">Because the best connections are not just made — they are felt.</p></section>""",unsafe_allow_html=True)
+    if full:
+        st.write("Based in Ahmedabad, we welcome enquiries from individuals and families in India and abroad. Our approach is personal, respectful and centred on understanding each person's preferences.")
+
+def steps():
+    st.markdown("""<div class="steps"><div class="step"><span class="step-num">01</span><strong>Enquire</strong><p>Tell us a little about yourself and your expectations.</p></div><div class="step"><span class="step-num">02</span><strong>Consult</strong><p>Discuss your preferences, service options and next steps privately.</p></div><div class="step"><span class="step-num">03</span><strong>Connect</strong><p>Explore suitable introductions with care, consent and discretion.</p></div></div>""",unsafe_allow_html=True)
+
+if page=="Home":
+    st.markdown("""<section class="hero"><div class="eyebrow">Kamini &amp; Komal · Personal matrimonial services</div><h1>Beyond matchmaking.<br>Find your kind of connection.</h1><p>Thoughtful introductions, shared values and a life partner who matches your vibe.</p></section>""",unsafe_allow_html=True)
+    left,right=st.columns(2)
+    with left:
+        if st.button("♡  Register Your Interest",type="primary",use_container_width=True):
+            st.session_state["go_register"]=True
+            st.rerun()
+    with right: contact_button("💬 Chat on WhatsApp")
+    st.markdown('<div class="trust"><span>♡ Personalised introductions</span><span>♧ Family-focused guidance</span><span>◎ India &amp; worldwide</span><span>♢ Trust and discretion</span></div>',unsafe_allow_html=True)
+    st.markdown('<div class="trust"><span><div class="stat">10</div>Paying clients to date</span><span><div class="stat">25+</div>Years of shared journey</span><span><div class="stat">1:1</div>Personal approach</span></div>',unsafe_allow_html=True)
+    story()
+    st.header("How K&K Works")
+    st.write("A simple, transparent process designed around you.")
+    steps()
+    st.header("Connections Across Borders")
+    st.write("From Ahmedabad to Indian communities worldwide.")
+    show_map(310)
+    st.caption("Routes are illustrative of our service focus, not records of international matches.")
+    st.markdown('<div class="cta"><h2>Let’s begin with a conversation.</h2><p>Speak with Kamini or Komal about our services and your preferences.</p></div>',unsafe_allow_html=True)
+    contact_button()
+elif page=="Our Story":
+    st.title("Our Story")
+    story(full=True)
+    st.markdown('<div class="trust"><span><div class="stat">10</div>Clients who have chosen K&amp;K</span><span><div class="stat">25+</div>Years of shared journey</span></div>',unsafe_allow_html=True)
+    st.info("Our shared journey began in fashion. We do not claim 25 years of matrimonial-service experience.")
+    contact_button()
+elif page=="How It Works":
+    st.title("How K&K Works")
+    st.write("Personal guidance rather than a public directory of profiles.")
+    steps()
+    st.markdown('<div class="section-card"><h2>What to expect</h2><p>We begin by understanding your expectations and explaining our service. Any potential introductions are handled privately. Fees and terms are discussed before you decide whether to proceed.</p></div>',unsafe_allow_html=True)
+    st.info("A match, engagement or marriage cannot be guaranteed.")
+    contact_button("Ask about the process")
+elif page=="Global Connections":
+    st.title("Connections Across Borders")
+    st.write("From Ahmedabad to Indian communities worldwide.")
+    show_map(480)
+    st.caption("The routes are illustrative and do not represent actual client records or completed matches.")
 elif page=="Register Interest":
-    st.title("Begin your journey")
-    st.write("Prepare a WhatsApp enquiry. No login or public profile is needed.")
-    st.info("This form does not save a submission to a database. You choose whether to send your prepared message through WhatsApp.")
+    st.title("Begin Your Journey")
+    st.write("Prepare a private WhatsApp enquiry. No login or public profile required.")
+    st.info("This form does not store submissions in a database. You decide whether to send your prepared message through WhatsApp.")
     with st.form("interest"):
         name=st.text_input("Your name *",max_chars=100)
         who=st.radio("Enquiring for",["Myself","A family member"],horizontal=True)
@@ -77,15 +128,16 @@ elif page=="Register Interest":
             msg=f"Hello K&K Connections, I would like to enquire.\nName: {name.strip()}\nFor: {who}\nCountry: {country}\nPhone: {phone.strip()}\nService: {service}"
             st.success("Your enquiry is prepared. Review it before sending.")
             st.link_button("Open WhatsApp to send",f"https://wa.me/{WHATSAPP}?text={quote(msg)}",type="primary")
-            st.caption("WhatsApp handles information under its own privacy terms. No data is sent until you choose to send it.")
+            st.caption("No data is sent until you choose to send your message.")
 else:
     st.title("Fees & Contact")
-    st.write("Fees and service options are discussed during your consultation. Please request current pricing and terms before making any payment.")
-    st.warning("Do not send payments to unverified numbers or QR codes. Official UPI details will be provided directly after consultation.")
+    st.write("K&K uses an initial-fee and success-based-fee model. Please request the current amounts, deliverables, refund terms and conditions directly before paying.")
+    st.warning("Do not send payments to unverified numbers or QR codes. Confirm payment details directly with the team.")
     st.markdown("**K&K Connections — Ahmedabad, Gujarat, India**")
-    st.markdown("**Contact:** +91 98251 17413 ")
-    st.link_button("Contact on WhatsApp",f"https://wa.me/{WHATSAPP}")
+    st.write("Kamini Shah: +91 98251 17413")
+    st.write("Komal Thakkar: +91 91730 13877")
+    contact_button()
     st.subheader("Privacy")
-    st.write("We request only basic contact information for initial enquiries. No public profiles or account creation. Please avoid sharing ID documents, photographs or sensitive personal information in the initial enquiry. You may contact us to ask about how your information is handled.")
+    st.write("We request only basic contact details for an initial enquiry. No public profiles or account creation. Please avoid sharing ID documents, photographs or sensitive information in your initial message. Ask the team how your details are handled before providing further information.")
 st.divider()
-st.caption("© K&K Connections · Personal matchmaking · Ahmedabad, India")
+st.markdown('<div class="footer">© K&amp;K Connections · Personal matrimonial introductions · Ahmedabad, India</div>',unsafe_allow_html=True)
