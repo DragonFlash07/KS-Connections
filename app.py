@@ -29,7 +29,6 @@ h1,h2,h3{font-family:Georgia,serif;color:#6d2c42}
 .quote{font-family:Georgia,serif;font-style:italic;font-size:21px;color:#8a3d54;border-left:3px solid #c49b7d;padding-left:15px;margin-top:18px}
 .trust{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}
 .trust span{flex:1;min-width:150px;background:#f9eae6;border-radius:13px;padding:16px;text-align:center;color:#743448}
-.stat{font-family:Georgia,serif;font-size:35px;color:#762f47;font-weight:bold}
 .steps{display:flex;gap:12px;flex-wrap:wrap;margin:15px 0}
 .step{flex:1;min-width:185px;background:#f8ebe6;padding:20px;border-radius:15px}
 .step strong{color:#6d2c42;font-size:18px}
@@ -79,12 +78,8 @@ if page=="Home":
             st.session_state["go_register"]=True
             st.rerun()
     with right: contact_button("💬 Chat on WhatsApp")
-    st.markdown('<div class="trust"><span>♡ Personalised introductions</span><span>♧ Family-focused guidance</span><span>◎ India &amp; worldwide</span><span>♢ Trust and discretion</span></div>',unsafe_allow_html=True)
-    st.markdown('<div class="trust"><span><div class="stat">10</div>Paying clients to date</span><span><div class="stat">25+</div>Years of shared journey</span><span><div class="stat">1:1</div>Personal approach</span></div>',unsafe_allow_html=True)
+    st.markdown('<div class="trust"><span>♡ Personalised introductions and family-focused guidance</span><span>◎ Connecting Indian families across borders</span></div>',unsafe_allow_html=True)
     story()
-    st.header("How K&K Works")
-    st.write("A simple, transparent process designed around you.")
-    steps()
     st.header("Connections Across Borders")
     st.write("From Ahmedabad to Indian communities worldwide.")
     show_map(310)
@@ -94,8 +89,6 @@ if page=="Home":
 elif page=="Our Story":
     st.title("Our Story")
     story(full=True)
-    st.markdown('<div class="trust"><span><div class="stat">10</div>Clients who have chosen K&amp;K</span><span><div class="stat">25+</div>Years of shared journey</span></div>',unsafe_allow_html=True)
-    st.info("Our shared journey began in fashion. We do not claim 25 years of matrimonial-service experience.")
     contact_button()
 elif page=="How It Works":
     st.title("How K&K Works")
